@@ -30,7 +30,7 @@ public class Encryptor {
      * Constructs an Encryptor object which will use the given {@link com.nearce.rsa.internal.KeyPair}
      * for its lifetime.
      *
-     * @param keyPair
+     * @param keyPair the {@link com.nearce.rsa.internal.KeyPair} which will be used
      */
     public Encryptor(KeyPair keyPair) {
         this.keyPair = keyPair;
