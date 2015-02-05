@@ -21,20 +21,67 @@ import com.nearce.rsa.internal.*;
 
 import java.math.BigInteger;
 
+import static java.lang.System.out;
+import static java.math.BigInteger.ONE;
+
 public class Main {
 
+    // The number of times to check the prime number with Fermat's little theorem
+    private static final int CHECK_THRESHOLD = 10;
+
     public static void main(String[] args) {
-        PairGenerator gen = new PairGenerator(10);
-        KeyPair pair = gen.keyGen(50, 50);
-        PublicKey pub = pair.getPublicKey();
-        PrivateKey priv = pair.getPrivateKey();
+        PairGenerator generator = new PairGenerator(CHECK_THRESHOLD);
 
-        System.out.println("Pub n: " + pub.getN() + ", e: " + pub.getE());
-        System.out.println("Priv n: " + priv.getN() + ", d: " + priv.getD());
+        // Forward declaration of all used variables
+        int digits;
+        String identifier;
+        StringBuilder builder;
+        BigInteger[] res;
+        BigInteger e, a, b, p, q, n, d;
+        Encryptor encryptor;
 
-        Encryptor encryptor = new Encryptor(pair);
-        BigInteger encr = encryptor.encrypt("What's up man?");
+        // Command handling
+        switch (args.length) {
+            case 1:
+                digits = Integer.parseInt(args[0]);
+                out.println("Prime integer with " + digits + " digits: " + generator.getPrime(digits, CHECK_THRESHOLD));
+                break;
+            case 2:
+                a = new BigInteger(args[0]);
+                b = new BigInteger(args[1]);
 
-        System.out.println(encryptor.decrypt(encr));
+                res = generator.extendedEuclidean(a, b);
+                out.println("GCD: " + res[0] + ", X: " + res[1] + ", Y: " + res[2]);
+                break;
+            case 3:
+                e = new BigInteger(args[0]);
+                p = new BigInteger(args[1]);
+                q = new BigInteger(args[2]);
+
+                out.println("Inverse: " + generator.findD(e, p.subtract(ONE).multiply(q.subtract(ONE))));
+                break;
+            case 4:
+                identifier = args[0];
+                n = new BigInteger(args[2]);
+                builder = new StringBuilder();
+                for (int i = 3; i < args.length; ++i) {
+                    builder.append(args[i]);
+                }
+                switch (identifier) {
+                    case "e":
+                        e = new BigInteger(args[1]);
+                        encryptor = new Encryptor(new KeyPair(new PublicKey(n, e), null));
+                        out.println("Encrypted result: " + encryptor.encrypt(builder.toString()));
+                        break;
+                    case "d":
+                        d = new BigInteger(args[1]);
+                        encryptor = new Encryptor(new KeyPair(null, new PrivateKey(n, d)));
+                        out.println("Decrypted result: " + encryptor.decrypt(builder.toString()));
+                        break;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Incorrect number of arguments.");
+        }
     }
 }
