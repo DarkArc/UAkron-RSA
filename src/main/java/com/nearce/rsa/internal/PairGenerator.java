@@ -98,14 +98,28 @@ public class PairGenerator {
      */
     public BigInteger[] findED(BigInteger a) {
         BigInteger e;
-        BigInteger[] res;
+        BigInteger d;
         do {
-            e = genBoundInteger(a);                             // Generate an integer e, between 1, and a
-            res = extendedEuclidean(a, e);                      // Execute the euclidean algorithm to obtain d
+            e = genBoundInteger(a); // Generate an integer e, between 1, and a
+            d = findD(a, e);
+        } while (d == null);
+        return new BigInteger[] {e, d};
+    }
 
-                                                                // Check for a remainder of 1,
-        } while (!res[0].equals(ONE) || a.mod(e).equals(ZERO)); // and that a isn't divisible by e
-        return new BigInteger[] {e, res[2].mod(a)};
+    /**
+     * Takes some integer a, and some integer e, then finds the multiplicative
+     * inverse of e.
+     *
+     * @param a (p-1)(q-1)
+     * @param e An integer bound by 1 <= e <= a
+     * @return the multiplicative inverse of e, or null if it couldn't be found
+     */
+    public BigInteger findD(BigInteger a, BigInteger e) {
+        // Execute the euclidean algorithm
+        BigInteger[] res = extendedEuclidean(a, e);
+        // Check for a remainder of 1, and that a isn't divisible by e, then
+        // return either null (d can't be found), or return the result of y % a, giving you d
+        return !res[0].equals(ONE) || a.mod(e).equals(ZERO) ? null : res[2].mod(a);
     }
 
     /**
