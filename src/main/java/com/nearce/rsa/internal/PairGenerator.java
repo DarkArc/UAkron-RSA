@@ -28,7 +28,7 @@ public class PairGenerator {
 
     /**
      * Constructs a PairGenerator object, which will always test all prime numbers
-     * with Fermat's little theorem the specified amount of times.
+     * with Fermat's little theorem the specified amount of times, unless otherwise specified.
      *
      * @param testQ the number of times a generated number must pass Fermat's little theorem
      *              to be considered prime, must be at least 1
