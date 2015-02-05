@@ -19,6 +19,7 @@ package com.nearce.rsa.internal;
 
 import java.math.BigInteger;
 
+import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
 public class Encryptor {
@@ -67,12 +68,14 @@ public class Encryptor {
      * @return the {@link java.math.BigInteger} representation of the {@link java.lang.String}
      */
     private BigInteger serialize(String message) {
-        BigInteger b = ZERO;
-        for (int i = message.length() - 1; i >= 0; --i) {
+        BigInteger returnVal = ZERO;
+        BigInteger last = ONE;
+        for (int i = 0; i < message.length(); ++i) {
             // Get the ASCII, then multiply by 128 ^ i, then add back to b
-            b = b.add(new BigInteger(String.valueOf((short) message.charAt(i))).multiply(C_128.pow(i)));
+            returnVal = returnVal.add(new BigInteger(String.valueOf((short) message.charAt(i))).multiply(last));
+            last = last.multiply(C_128);
         }
-        return b;
+        return returnVal;
     }
 
     /**
@@ -107,7 +110,7 @@ public class Encryptor {
     private String deserialize(BigInteger iMessage) {
         StringBuilder b = new StringBuilder();
         BigInteger r;
-        for (int k = 0; (r = iMessage.divide(C_128.pow(k))).compareTo(ZERO) != 0; ++k) {
+        for (BigInteger l = ONE; (r = iMessage.divide(l)).compareTo(ZERO) != 0; l = l.multiply(C_128)) {
             b.append((char) (r.mod(C_128).intValue()));
         }
         return b.toString();
