@@ -65,6 +65,9 @@ public class Main {
                 n = new BigInteger(args[2]);
                 builder = new StringBuilder();
                 for (int i = 3; i < args.length; ++i) {
+                    if (i > 3) {
+                        builder.append(' ');
+                    }
                     builder.append(args[i]);
                 }
                 switch (identifier) {
