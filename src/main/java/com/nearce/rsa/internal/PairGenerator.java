@@ -78,7 +78,7 @@ public class PairGenerator {
      * @return the generated {@link java.math.BigInteger}
      */
     public BigInteger genBoundInteger(BigInteger min, BigInteger max) {
-        if (min.compareTo(max) != -1) {
+        if (min.compareTo(max) == 1) {
             throw new IllegalArgumentException("The maximum value must be greater than the minimum value.");
         }
         BigInteger res;
