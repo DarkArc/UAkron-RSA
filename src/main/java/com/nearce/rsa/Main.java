@@ -58,7 +58,7 @@ public class Main {
                 p = new BigInteger(args[1]);
                 q = new BigInteger(args[2]);
 
-                out.println("N: " + p.multiply(q) + ", Inverse: " + generator.findD(e, p.subtract(ONE).multiply(q.subtract(ONE))));
+                out.println("N: " + p.multiply(q) + ", Inverse: " + generator.findD(p.subtract(ONE).multiply(q.subtract(ONE)), e));
                 break;
             case 4:
                 identifier = args[0];

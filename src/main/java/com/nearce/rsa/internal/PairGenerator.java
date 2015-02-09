@@ -85,7 +85,7 @@ public class PairGenerator {
         do {
             // Generate an integer based on a random bit length, and random bit values
             res = new BigInteger((int) (max.bitLength() * internalRand.nextDouble()), internalRand);
-        } while (res.compareTo(min) != 1 && res.compareTo(max) != -1); // Ensure the integer is within bounds
+        } while (res.compareTo(min) != 1 || res.compareTo(max) != -1); // Ensure the integer is within bounds
         return res;
     }
 
@@ -115,6 +115,9 @@ public class PairGenerator {
      * @return the multiplicative inverse of e, or null if it couldn't be found
      */
     public BigInteger findD(BigInteger a, BigInteger e) {
+        if (e.compareTo(ONE) != 1 || e.compareTo(a) != -1) {
+            throw new IllegalArgumentException("e must be within the bounds 1 <= e <= a");
+        }
         // Execute the euclidean algorithm
         BigInteger[] res = extendedEuclidean(a, e);
         // Check for a remainder of 1, and that a isn't divisible by e, then

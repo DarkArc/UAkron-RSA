@@ -72,7 +72,7 @@ public class Encryptor {
         BigInteger last = ONE;
         for (int i = 0; i < message.length(); ++i) {
             // Get the ASCII, then multiply by 128 ^ i, then add back to b
-            returnVal = returnVal.add(new BigInteger(String.valueOf((short) message.charAt(i))).multiply(last));
+            returnVal = returnVal.add(new BigInteger(String.valueOf(message.codePointAt(i))).multiply(last));
             last = last.multiply(C_128);
         }
         return returnVal;
